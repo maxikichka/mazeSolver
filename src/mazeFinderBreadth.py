@@ -4,14 +4,14 @@ WIDTH = 700
 HEIGHT = 700
 
 grid = [[0, 0, 0, 1, 1, 0, 0, 1, 0, 0], 
-        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0],
-        [0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-        [0, 1, 0, 1, 0, 0, 1, 1, 1, 0],
-        [1, 1, 1, 1, 1, 0, 0, 1, 0, 1],
-        [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0, 1, 1, 0],
-        [0, 1, 1, 0, 1, 0, 1, 0, 0, 0],
-        [0, 1, 0, 0, 0, 1, 0, 1, 1, 1],
+        [0, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+        [1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+        [1, 1, 0, 1, 0, 0, 1, 1, 1, 1],
+        [0, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+        [0, 1, 1, 0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 neighborNodes = []
@@ -38,10 +38,10 @@ def drawGrid(win):
     for i in range(len(grid)):
         y = 0
         for j in range(len(grid[i])):
-            if [i, j] in neighborNodes:
-                pygame.draw.rect(win, (255, 255, 0), (x, y, squareWidth, squareHeight))
             if [i, j] in used:
                 pygame.draw.rect(win, (160, 32, 240), (x, y, squareWidth, squareHeight))
+            if [i, j] in neighborNodes:
+                pygame.draw.rect(win, (255, 255, 0), (x, y, squareWidth, squareHeight))
             if grid[i][j] == 1:
                 pygame.draw.rect(win, (0, 0, 0), (x, y, squareWidth, squareHeight))
             if grid[i][j] == 2:
@@ -56,12 +56,16 @@ def drawGrid(win):
 def checkSides():
     global cellI, cellJ, done
     if cellI < len(grid) - 1 and grid[cellI + 1][cellJ] != 1 and [cellI + 1, cellJ] not in used:
+        used.append([cellI + 1, cellJ])
         neighborNodes.append([cellI + 1, cellJ])
     if cellI > 0 and grid[cellI - 1][cellJ] != 1 and [cellI - 1, cellJ] not in used:
+        used.append([cellI - 1, cellJ])
         neighborNodes.append([cellI - 1, cellJ])
     if cellJ < len(grid[0]) - 1 and grid[cellI][cellJ + 1] != 1 and [cellI, cellJ + 1] not in used:
+        used.append([cellI, cellJ + 1])
         neighborNodes.append([cellI, cellJ + 1])
     if cellJ > 0 and grid[cellI][cellJ - 1] != 1 and [cellI, cellJ - 1] not in used:
+        used.append([cellI, cellJ - 1])
         neighborNodes.append([cellI, cellJ - 1])
 
     if grid[neighborNodes[-1][0]][neighborNodes[-1][1]] == 3:
@@ -72,7 +76,6 @@ def checkSides():
     grid[cellI][cellJ] = 0
     cellI, cellJ = neighborNodes[0][0], neighborNodes[0][1]
     grid[cellI][cellJ] = 2
-    used.append([cellI, cellJ])
     neighborNodes.pop(0)
 
 def main():
